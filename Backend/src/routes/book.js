@@ -21,10 +21,10 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage });
 
 // 🔹 Get all books (Public)
-BookRoutes.get('/', getBooks);
+BookRoutes.get('/',authMiddleware, getBooks);
 
 // 🔹 Get a single book by ID (Public)
-BookRoutes.get('/:id', getBookById);
+BookRoutes.get('/:id',authMiddleware, roleMiddleware('admin','user'), getBookById);
 
 // 🔹 Add a new book (Admin Only)
 BookRoutes.post('/', authMiddleware, roleMiddleware('admin'), upload.single('coverImage'), postBook);
