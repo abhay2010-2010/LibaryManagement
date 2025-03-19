@@ -7,6 +7,7 @@ import AddBook from "./pages/AddBook";
 import PrivateRoute from "./components/PrivateRoute";
 import UpdateBook from "./pages/UpdateBook";
 import "./App.css";
+import LikedBooks from "./pages/LikedBook";
 function App() {
   return (
     <div >
@@ -17,6 +18,7 @@ function App() {
         <Route path="/book/:id" element={<PrivateRoute><BookDetails /></PrivateRoute>} />
         <Route path="/add-book" element={<PrivateRoute><AddBook /></PrivateRoute>} />
         <Route path="/edit-book/:id" element={<PrivateRoute><UpdateBook /></PrivateRoute>} />
+        <Route path="/liked-books" element={<PrivateRoute><LikedBooks /></PrivateRoute>}/>
       </Routes>
     </div>
   );

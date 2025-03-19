@@ -68,14 +68,26 @@ const Book = ({ book, loading }) => {
   );
 };
 
-const BookList = ({ books, loading }) => {
+const BookList = ({ books = [], loading }) => {
+  if (!Array.isArray(books)) {
+    console.error("Error: books is not an array", books);
+    return <p className="text-center text-danger">Error loading books. Please try again.</p>;
+  }
+
+  if (loading) {
+    return <p className="text-center">Loading books...</p>;
+  }
+
   return (
     <div className="books-grid">
-      {books.map((book, index) => (
-        <Book key={book._id} book={book} loading={loading} />
-      ))}
+      {books.length > 0 ? (
+        books.map((book) => <Book key={book._id} book={book} />)
+      ) : (
+        <p className="text-center">No books available.</p>
+      )}
     </div>
   );
 };
 
 export default BookList;
+
