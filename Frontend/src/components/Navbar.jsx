@@ -10,9 +10,9 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const user = useSelector((state) => state.auth.user);
-  console.log(user) // ✅ Get user from Redux store
+  // console.log(user) // ✅ Get user from Redux store
   const books = useSelector((state) => state.books.books);
- 
+  const likedBooks = useSelector((state) => state.books.likedBooks);
   const navigate = useNavigate();
 
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
@@ -86,7 +86,16 @@ const Navbar = () => {
         <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "10px" }}>
           
  
-
+          <button onClick={() => navigate("/liked-books")} style={{
+            padding: "8px 12px",
+            borderRadius: "5px",
+            backgroundColor: darkMode ? "#ffcc00" : "#444",
+            color: darkMode ? "#222" : "white",
+            border: "none",
+            cursor: "pointer"
+          }}>
+        ❤️ Liked Books ({likedBooks.length})
+      </button>
           <button
             onClick={() => setDarkMode(!darkMode)}
             style={{

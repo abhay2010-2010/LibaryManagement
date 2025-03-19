@@ -1,17 +1,16 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleLike } from "../redux/reducers/Book"; // ✅ Import Redux action
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/book.css";
 
 const Book = ({ book, loading }) => {
-  const [liked, setLiked] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
-
-  const handleLike = (e) => {
-    e.stopPropagation();
-    setLiked(!liked);
-  };
+  const likedBooks = useSelector((state) => state.books.likedBooks);
+  const isLiked = likedBooks.includes(book._id);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (book?.coverImage) {
@@ -45,7 +44,7 @@ const Book = ({ book, loading }) => {
       <div className="book-card" onClick={() => window.location.href = `/book/${book._id}`}>
         <div className="book-image-container">
           {book.coverImage ? (
-            <img src={book.coverImage} alt={book.title} className="book-image" onLoad={() => setImageLoaded(true)} />
+            <img src={book.coverImage} alt={book.title} className="book-image" />
           ) : (
             <div className="skeleton-image"></div>
           )}
@@ -58,8 +57,8 @@ const Book = ({ book, loading }) => {
             <p className="book-year">Year: {book.year}</p>
           </div>
           <div className="book-actions">
-            <button className={`like-button ${liked ? 'liked' : ''}`} onClick={handleLike}>
-              {liked ? <FaHeart color="red" /> : <FaRegHeart />} Like
+            <button className={`like-button ${isLiked ? 'liked' : ''}`} onClick={() => dispatch(toggleLike(book._id))}>
+              {isLiked ? <FaHeart color="red" /> : <FaRegHeart />} Like
             </button>
             <Link to={`/book/${book._id}`} className="view-button">View Book</Link>
           </div>
@@ -73,7 +72,7 @@ const BookList = ({ books, loading }) => {
   return (
     <div className="books-grid">
       {books.map((book, index) => (
-        <Book key={index} book={book} loading={loading} />
+        <Book key={book._id} book={book} loading={loading} />
       ))}
     </div>
   );
