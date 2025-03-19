@@ -3,7 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../config";
 import { useSelector } from "react-redux";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const UpdateBook = () => {
   const { id } = useParams(); // Get book ID from URL
   const navigate = useNavigate();
@@ -64,11 +65,11 @@ const UpdateBook = () => {
         },
       });
 
-      alert("✅ Book updated successfully!");
+      toast.success("✅ Book updated succesfully");
       navigate("/dashboard");
     } catch (error) {
       console.error("❌ Error updating book:", error);
-      alert("Failed to update book.");
+      toast.error("❌ fail to update book.");
     } finally {
       setLoading(false);
     }
