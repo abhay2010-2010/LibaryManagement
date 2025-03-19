@@ -80,46 +80,9 @@ const Navbar = () => {
 
       {token ? (
         <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "10px" }}>
-          <input
-            type="text"
-            placeholder="Search books..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{
-              padding: "8px",
-              borderRadius: "5px",
-              border: "none",
-              outline: "none",
-              width: "180px"
-            }}
-          />
-         <button
-  onClick={handleSort}
-  style={{
-    padding: "10px 20px",
-    borderRadius: "8px",
-    backgroundColor: sortOrder === "asc" ? "#007bff" : "#e74c3c", // Blue for ascending, Red for descending
-    color: "white",
-    border: "none",
-    cursor: "pointer",
-    fontSize: "14px",
-    fontWeight: "600",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    transition: "background-color 0.3s ease, transform 0.2s ease",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-  }}
-  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
->
-  {sortOrder === "asc" ? (
-    <span role="img" aria-label="ascending">⬆️</span> // Up arrow for ascending
-  ) : (
-    <span role="img" aria-label="descending">⬇️</span> // Down arrow for descending
-  )}
-  Sort {sortOrder === "asc" ? "Ascending" : "Descending"}
-</button>
+          
+ 
+
           <button
             onClick={() => setDarkMode(!darkMode)}
             style={{
