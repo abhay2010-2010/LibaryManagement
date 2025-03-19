@@ -9,7 +9,8 @@ import { API_BASE_URL } from "../config";
 const Navbar = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
-  const user = useSelector((state) => state.auth.user); // ✅ Get user from Redux store
+  const user = useSelector((state) => state.auth.user);
+  console.log(user) // ✅ Get user from Redux store
   const books = useSelector((state) => state.books.books);
   const [search, setSearch] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
@@ -92,19 +93,33 @@ const Navbar = () => {
               width: "180px"
             }}
           />
-          <button
-            onClick={handleSort}
-            style={{
-              padding: "8px 12px",
-              borderRadius: "5px",
-              backgroundColor: "white",
-              color: "#007bff",
-              border: "none",
-              cursor: "pointer"
-            }}
-          >
-            Sort ({sortOrder})
-          </button>
+         <button
+  onClick={handleSort}
+  style={{
+    padding: "10px 20px",
+    borderRadius: "8px",
+    backgroundColor: sortOrder === "asc" ? "#007bff" : "#e74c3c", // Blue for ascending, Red for descending
+    color: "white",
+    border: "none",
+    cursor: "pointer",
+    fontSize: "14px",
+    fontWeight: "600",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    transition: "background-color 0.3s ease, transform 0.2s ease",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+  }}
+  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+>
+  {sortOrder === "asc" ? (
+    <span role="img" aria-label="ascending">⬆️</span> // Up arrow for ascending
+  ) : (
+    <span role="img" aria-label="descending">⬇️</span> // Down arrow for descending
+  )}
+  Sort {sortOrder === "asc" ? "Ascending" : "Descending"}
+</button>
           <button
             onClick={() => setDarkMode(!darkMode)}
             style={{
@@ -119,18 +134,6 @@ const Navbar = () => {
             {darkMode ? "🌙 Dark Mode" : "☀ Light Mode"}
           </button>
           
-          <Link
-            to="/dashboard"
-            style={{
-              textDecoration: "none",
-              padding: "8px 12px",
-              borderRadius: "5px",
-              backgroundColor: "white",
-              color: "#007bff"
-            }}
-          >
-            Dashboard
-          </Link>
 
           {/* ✅ "Create Book" Button for Admin Only */}
           {user?.role === "admin" && (

@@ -1,39 +1,67 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FaHeart, FaRegHeart } from "react-icons/fa"; // Icons for like button
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
-const Book = ({ book }) => {
+import "../styles/book.css";
+
+const Book = ({ book, loading }) => {
   const [liked, setLiked] = useState(false);
-// console.log(book) for checking i am getting data tor not
-  const handleLike = () => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  const handleLike = (e) => {
+    e.stopPropagation();
     setLiked(!liked);
   };
 
+  useEffect(() => {
+    if (book?.coverImage) {
+      const img = new Image();
+      img.src = book.coverImage;
+      img.onload = () => setImageLoaded(true);
+    }
+  }, [book]);
+
+  if (loading || !imageLoaded) {
+    return (
+      <div className="book-container">
+        <div className="book-skeleton">
+          <div className="skeleton-image"></div>
+          <div className="skeleton-content">
+            <div className="skeleton-title"></div>
+            <div className="skeleton-text"></div>
+            <div className="skeleton-text"></div>
+            <div className="skeleton-buttons">
+              <div className="skeleton-btn"></div>
+              <div className="skeleton-btn"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
-      <div className="card shadow-lg border-0 rounded overflow-hidden">
-        {book.coverImage && (
-          <img
-            src={book.coverImage}
-            className="card-img-top"
-            alt={book.title}
-            style={{ height: "50%", objectFit: "cover" }}
-          />
-        )}
-        <div className="card-body text-center d-flex flex-column">
-          <h5 className="card-title fw-bold text-primary">{book.title}</h5>
-          <p className="card-text text-secondary">
-            <strong>Author:</strong> {book.author} <br />
-            <strong>Genre:</strong> {book.genre} <br />
-            <strong>Year:</strong> {book.year}
-          </p>
-          <div className="mt-auto">
-            <button className="btn btn-outline-danger me-2" onClick={handleLike}>
+    <div className="book-container">
+      <div className="book-card" onClick={() => window.location.href = `/book/${book._id}`}>
+        <div className="book-image-container">
+          {book.coverImage ? (
+            <img src={book.coverImage} alt={book.title} className="book-image" onLoad={() => setImageLoaded(true)} />
+          ) : (
+            <div className="skeleton-image"></div>
+          )}
+        </div>
+        <div className="book-content">
+          <h5 className="book-title">Title: {book.title}</h5>
+          <div className="book-details">
+            <p className="book-author">Author: {book.author}</p> 
+            <p className="book-genre">Genre: {book.genre}</p> 
+            <p className="book-year">Year: {book.year}</p>
+          </div>
+          <div className="book-actions">
+            <button className={`like-button ${liked ? 'liked' : ''}`} onClick={handleLike}>
               {liked ? <FaHeart color="red" /> : <FaRegHeart />} Like
             </button>
-            <Link to={`/book/${book._id}`} className="btn btn-primary">
-              View Book
-            </Link>
+            <Link to={`/book/${book._id}`} className="view-button">View Book</Link>
           </div>
         </div>
       </div>
@@ -41,4 +69,14 @@ const Book = ({ book }) => {
   );
 };
 
-export default Book;
+const BookList = ({ books, loading }) => {
+  return (
+    <div className="books-grid">
+      {books.map((book, index) => (
+        <Book key={index} book={book} loading={loading} />
+      ))}
+    </div>
+  );
+};
+
+export default BookList;

@@ -3,19 +3,20 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { API_BASE_URL } from "../config";
 import { setBooks } from "../redux/reducers/Book";
-import Book from "../components/Book";
-// import { setBooks } from "../redux/slices/bookSlice";
-// import Book from "../components/Book";
+import BooksGrid from "../components/BookGrid";
+import BookList from "../components/Book";
+// import { BookGrid } from "../components/Book"; // ✅ Correct import
 
 const Dashboard = () => {
   const dispatch = useDispatch();
-  const books = useSelector((state) => state.books.books);
+  const books = useSelector((state) => state.books.books || []);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios.get(`${API_BASE_URL}/books`)
       .then((res) => {
-        dispatch(setBooks(res.data));
+        console.log("API Response:", res.data);
+        dispatch(setBooks(res.data || [])); // ✅ Ensure it's an array
         setLoading(false);
       })
       .catch((err) => {
@@ -24,19 +25,12 @@ const Dashboard = () => {
       });
   }, [dispatch]);
 
-  if (loading) return <h2>Loading...</h2>;
-
   return (
     <div className="container mt-4">
-      <h2 className="text-center mb-4">Books Libary</h2>
-      <div className="row">
-        {books.length > 0 ? (
-          books.map((book) => <Book key={book._id} book={book} />)
-        ) : (
-          <p className="text-center">No books available</p>
-        )}
-      </div>
+      <h2 className="text-center mb-4">📚 Books Library</h2>
+      <BookList books={books} loading={loading} /> {/* ✅ Correct Usage */}
     </div>
   );
 };
+
 export default Dashboard;

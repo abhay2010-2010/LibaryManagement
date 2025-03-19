@@ -1,0 +1,130 @@
+/* 🌟 Background for the Authentication Page */
+.auth-background {
+  width: 100%;
+  height: 100vh;
+  background: url("https://source.unsplash.com/1600x900/?library,books") no-repeat center center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s ease;
+}
+
+/* 🌟 Glassmorphism Authentication Container */
+.auth-container {
+  width: 400px;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-radius: 12px;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: fadeIn 0.7s ease-in-out;
+}
+
+/* 🔹 Title */
+.auth-title {
+  font-size: 26px;
+  font-weight: bold;
+  color: rgb(21, 20, 20);
+  margin-bottom: 20px;
+  text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* 📝 Form */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* ✨ Input Fields */
+.auth-input,
+.auth-select {
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  outline: none;
+  width: 100%;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.3);
+  color: black; /* ✅ Fixed text visibility in light mode */
+}
+
+/* Placeholder color */
+.auth-input::placeholder {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.auth-input:focus,
+.auth-select:focus {
+  border-color: #007bff;
+  box-shadow: 0px 0px 10px rgba(0, 123, 255, 0.5);
+}
+
+/* 🎯 Buttons */
+.auth-button,
+.auth-toggle-button {
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  color: white;
+}
+
+/* 🌟 Login/Register Button */
+.auth-button {
+  background: linear-gradient(45deg, #007bff, #0056b3);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.auth-button:hover {
+  background: linear-gradient(45deg, #0056b3, #004080);
+  transform: translateY(-2px);
+}
+
+/* 🔄 Toggle Button */
+.auth-toggle-button {
+  margin-top: 15px;
+  background: linear-gradient(45deg, #ff6600, #ff3300);
+}
+
+.auth-toggle-button:hover {
+  background: linear-gradient(45deg, #ff3300, #cc0000);
+  transform: translateY(-2px);
+}
+
+/* ❌ Error Message */
+.auth-error {
+  color: rgb(255, 80, 80);
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: -5px;
+}
+
+/* 🌙 Dark Mode */
+.dark-mode .auth-container {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+}
+
+.dark-mode .auth-input,
+.dark-mode .auth-select {
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 1px solid #555;
+}
+
+/* 🌟 Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

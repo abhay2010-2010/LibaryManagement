@@ -3,14 +3,16 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { API_BASE_URL } from "../config";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const BookDetails = () => {
-  const { id } = useParams(); // Get book ID from URL
+  const { id } = useParams();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
 
-  const user = useSelector((state) => state.auth.user); // Get logged-in user
+  const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,6 +23,7 @@ const BookDetails = () => {
       })
       .catch((err) => {
         console.error("Error fetching book details:", err);
+        toast.error("❌ Failed to load book details!");
         setLoading(false);
       });
   }, [id]);
@@ -35,94 +38,110 @@ const BookDetails = () => {
           "Authorization": `Bearer ${localStorage.getItem("token")}`
         }
       });
-      alert("Book deleted successfully!");
+      toast.success("✅ Book deleted successfully!");
       navigate("/dashboard");
     } catch (error) {
       console.error("Error deleting book:", error);
-      alert("Failed to delete book.");
+      toast.error("❌ Failed to delete book.");
     } finally {
       setDeleting(false);
     }
   };
 
-  if (loading) return <h2>Loading...</h2>;
-  if (!book) return <h2>Book not found</h2>;
+  if (loading) return <h2 className="loading">Loading...</h2>;
+  if (!book) return <h2 className="not-found">Book not found</h2>;
 
   return (
     <div style={styles.container}>
-      {book.coverImage && (
-        <img src={book.coverImage} alt={book.title} style={styles.coverImage} />
-      )}
-      <div style={styles.details}>
-        <h2 style={styles.title}>{book.title}</h2>
-        <p style={styles.text}><strong>Author:</strong> {book.author}</p>
-        <p style={styles.text}><strong>Genre:</strong> {book.genre}</p>
-        <p style={styles.text}><strong>Year:</strong> {book.year}</p>
-        <p style={styles.description}><strong>Description:</strong> {book.description || "No description available."}</p>
-
-        <Link to="/dashboard" style={styles.backButton}>🔙 Back to Dashboard</Link>
-
-        {/* ✅ Show update & delete buttons only for admin */}
-        {user?.role === "admin" && (
-          <div style={styles.adminButtons}>
-            <button 
-            onClick={() => navigate(`/edit-book/${id}`)} 
-              style={styles.updateButton}
-            >
-              ✏ Update Book
-            </button>
-            <button 
-              onClick={handleDelete} 
-              style={styles.deleteButton}
-              disabled={deleting}
-            >
-              {deleting ? "Deleting..." : "🗑 Delete Book"}
-            </button>
-          </div>
+      <div style={styles.bookCard}>
+        {book.coverImage && (
+          <img src={book.coverImage} alt={book.title} style={styles.coverImage} />
         )}
+        <div style={styles.details}>
+          <h2 style={styles.title}>{book.title}</h2>
+          <p style={styles.text}><strong>Author:</strong> {book.author}</p>
+          <p style={styles.text}><strong>Genre:</strong> {book.genre}</p>
+          <p style={styles.text}><strong>Year:</strong> {book.year}</p>
+          <p style={styles.description}><strong>Description:</strong> {book.description || "No description available."}</p>
+
+          <Link to="/dashboard" style={styles.backButton}>🔙 Back to Dashboard</Link>
+
+          {user?.role === "admin" && (
+            <div style={styles.adminButtons}>
+              <button 
+                onClick={() => navigate(`/edit-book/${id}`)} 
+                style={styles.updateButton}
+              >
+                ✏ Update Book
+              </button>
+              <button 
+                onClick={handleDelete} 
+                style={styles.deleteButton}
+                disabled={deleting}
+              >
+                {deleting ? "Deleting..." : "🗑 Delete Book"}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
 };
 
+// 🎨 **Styled Components**
 const styles = {
   container: {
-    width: "400px", // ✅ Fixed width to 300px
-    height: "79vh", // ✅ Set height to 70% of viewport
-    margin: "auto",
-    padding: "20px",
-    borderRadius: "10px",
-    boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)",
-    backgroundColor: "#fff",
-    textAlign: "center",
-    transition: "all 0.3s ease",
-    display: "flex", // ✅ Ensure content aligns well
-    flexDirection: "column",
+    width: "100%",
+    minHeight: "80vh",
+    display: "flex",
     justifyContent: "center",
+    alignItems: "center",
+    padding: "20px",
+    backgroundColor: "#f4f4f4",
+  },
+  bookCard: {
+    width: "90%",
+    maxWidth: "600px",
+    backgroundColor: "#fff",
+    borderRadius: "12px",
+    boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.15)",
+    padding: "20px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    textAlign: "center",
+    transition: "all 0.3s ease-in-out",
   },
   coverImage: {
     width: "100%",
-    maxWidth: "250px", // ✅ Adjusted for better fit
-    height: "50%",
-    borderRadius: "10px",
+    maxWidth: "300px",
+    height: "250px",
+    objectFit: "cover",
+    borderRadius: "8px",
     marginBottom: "15px",
   },
   details: {
-    padding: "10px",
+    width: "100%",
   },
   title: {
     fontSize: "24px",
     fontWeight: "bold",
     color: "#007bff",
+    marginBottom: "10px",
   },
   text: {
     fontSize: "18px",
     color: "#555",
+    margin: "5px 0",
   },
   description: {
     fontSize: "16px",
     color: "#666",
     marginTop: "10px",
+    padding: "10px",
+    backgroundColor: "#f9f9f9",
+    borderRadius: "8px",
   },
   backButton: {
     display: "inline-block",
@@ -133,6 +152,7 @@ const styles = {
     textDecoration: "none",
     borderRadius: "5px",
     transition: "background-color 0.3s ease",
+    fontWeight: "bold",
   },
   adminButtons: {
     marginTop: "20px",
@@ -149,6 +169,7 @@ const styles = {
     cursor: "pointer",
     fontSize: "16px",
     transition: "background-color 0.3s ease",
+    fontWeight: "bold",
   },
   deleteButton: {
     padding: "10px 15px",
@@ -159,6 +180,7 @@ const styles = {
     cursor: "pointer",
     fontSize: "16px",
     transition: "background-color 0.3s ease",
+    fontWeight: "bold",
   },
 };
 

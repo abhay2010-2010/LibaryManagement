@@ -3,7 +3,7 @@ body {
   font-family: "Arial", sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f8f9fa;
+  background-color: #adc2d7;
   color: #333;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -50,7 +50,7 @@ body {
 }
 
 /* 🌟 Book Card */
-.book-card {
+/* .book-card {
   border: none;
   border-radius: 10px;
   overflow: hidden;
@@ -83,10 +83,10 @@ body {
   background-color: #333;
   color: white;
   box-shadow: 0px 5px 15px rgba(255, 255, 255, 0.1);
-}
+} */
 
 /* 🌟 Book Actions */
-.book-actions {
+/* .book-actions {
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
@@ -103,10 +103,10 @@ body {
 
 .view-button:hover {
   background-color: #0056b3;
-}
+} */
 
 /* ❤️ Like Button */
-.like-button {
+/* .like-button {
   background-color: #ff4d4d;
   color: white;
   padding: 8px 12px;
@@ -118,10 +118,10 @@ body {
 
 .like-button:hover {
   background-color: #cc0000;
-}
+} */
 
 /* 📚 Add Book Form */
-.add-book {
+/* .add-book {
   max-width: 500px;
   margin: auto;
   padding: 20px;
@@ -154,10 +154,10 @@ body {
 
 .add-book button:hover {
   background-color: #218838;
-}
+} */
 
 /* 📖 Book Details */
-.book-details {
+/* .book-details {
   max-width: 600px;
   margin: auto;
   padding: 20px;
@@ -198,7 +198,7 @@ body {
 
 .dark-mode .book-cover {
   border: 2px solid white;
-}
+} 
 
 /* 🌟 Responsive Grid */
 @media (min-width: 992px) {
