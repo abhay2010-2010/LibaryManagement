@@ -11,22 +11,39 @@ const BookDetails = () => {
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
+  // console.log(book)
 
   const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/books/${id}`)
-      .then((res) => {
+    const fetchBookDetails = async () => {
+      const token = localStorage.getItem("token");
+  
+      if (!token) {
+        console.log("⚠ No token found. Redirecting to login...");
+        toast.error("❌ Unauthorized! Please log in.");
+        navigate("/login");
+        return;
+      }
+  
+      try {
+        const res = await axios.get(`${API_BASE_URL}/books/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }, // ✅ Send token
+        });
+  
         setBook(res.data);
         setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching book details:", err);
+      } catch (error) {
+        console.error("❌ Error fetching book details:", error);
         toast.error("❌ Failed to load book details!");
         setLoading(false);
-      });
-  }, [id]);
+      }
+    };
+  
+    fetchBookDetails();
+  }, [id, navigate]);
+  
 
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete this book?")) return;
