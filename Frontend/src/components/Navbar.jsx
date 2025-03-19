@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { logout } from "../redux/reducers/Auth";
@@ -12,39 +12,43 @@ const Navbar = () => {
   const user = useSelector((state) => state.auth.user);
   console.log(user) // ✅ Get user from Redux store
   const books = useSelector((state) => state.books.books);
-  const [search, setSearch] = useState("");
-  const [sortOrder, setSortOrder] = useState("asc");
+ 
+  const navigate = useNavigate();
+
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
 
   // ✅ Fetch books when component mounts
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/books`)
-      .then((res) => dispatch(setBooks(res.data)))
-      .catch((err) => console.error("Error fetching books:", err));
-  }, [dispatch]);
+    const fetchBooks = async () => {
+      try {
+        const token = localStorage.getItem("token");
+  
+        if (!token) {
+          console.log("⚠ No token found. Redirecting to login...");
+          navigate("/login");
+          return;
+        }
+  
+        const res = await axios.get(`${API_BASE_URL}/books`, {
+          headers: { Authorization: `Bearer ${token}` }, // ✅ Send token
+        });
+  
+        // console.log("✅ API Response:", res.data);
+        dispatch(setBooks(res.data || []));
+      } catch (error) {
+        console.error("❌ Error fetching books:", error.response?.data || error);
+      }
+    };
+  
+    fetchBooks();
+  }, [dispatch, navigate]);
+  
 
   // ✅ Search books by title
-  useEffect(() => {
-    if (search.trim() !== "") {
-      const filteredBooks = books.filter((book) =>
-        book.title.toLowerCase().includes(search.toLowerCase())
-      );
-      dispatch(setBooks(filteredBooks));
-    } else {
-      axios.get(`${API_BASE_URL}/books`)
-        .then((res) => dispatch(setBooks(res.data)))
-        .catch((err) => console.error("Error fetching books:", err));
-    }
-  }, [search, dispatch]);
+
 
   // ✅ Sort books by year
-  const handleSort = () => {
-    const sortedBooks = [...books].sort((a, b) =>
-      sortOrder === "asc" ? a.year - b.year : b.year - a.year
-    );
-    dispatch(setBooks(sortedBooks));
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-  };
+
 
   // ✅ Toggle Dark/Light Mode (With LocalStorage)
   useEffect(() => {

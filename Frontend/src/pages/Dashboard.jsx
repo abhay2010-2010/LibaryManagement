@@ -4,25 +4,43 @@ import axios from "axios";
 import { API_BASE_URL } from "../config";
 import { setBooks } from "../redux/reducers/Book";
 import BookList from "../components/Book";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
   const books = useSelector((state) => state.books.books || []);
+  console.log(books)
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
+  const navigate=useNavigate();
 
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/books`)
-      .then((res) => {
+    const fetchBooks = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.log("⚠ No token found. Redirecting to login...");
+          navigate("/login");
+          return;
+        }
+  
+        const res = await axios.get(`${API_BASE_URL}/books`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+  
         dispatch(setBooks(res.data || []));
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching books:", err);
-        setLoading(false);
-      });
-  }, [dispatch]);
+        setLoading(false);  // ✅ Ensure loading state is updated after fetching
+      } catch (error) {
+        console.error("❌ Error fetching books:", error);
+        setLoading(false);  // ✅ Stop loading if there's an error
+      }
+    };
+  
+    fetchBooks();
+  }, [dispatch, navigate]);
+  
+  
 
   // ✅ Filter Books by Search Term
   const filteredBooks = books.filter((book) =>
