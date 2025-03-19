@@ -24,7 +24,7 @@ const upload = multer({ storage });
 BookRoutes.get('/',authMiddleware, getBooks);
 
 // 🔹 Get a single book by ID (Public)
-BookRoutes.get('/:id',authMiddleware, roleMiddleware('admin','user'), getBookById);
+BookRoutes.get('/:id',authMiddleware, getBookById);
 
 // 🔹 Add a new book (Admin Only)
 BookRoutes.post('/', authMiddleware, roleMiddleware('admin'), upload.single('coverImage'), postBook);
